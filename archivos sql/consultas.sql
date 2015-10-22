@@ -62,7 +62,38 @@ select c.ciudad from clientes c where c.ciudad in(select d.ciudad_dep from depar
 where c.ciudad=d.ciudad_dep);
 
 create table clientes2 like clientes;
-alter table clientes2 modify codigo_cli auto_increment;
+
+insert into clientes2 (nombre_cli,nif,direccion,ciudad,telefono) /* INSERTAR ALGO  */
+select nombre_cli,nif,direccion,ciudad,telefono
+from clientes
+where upper(ciudad) like 'P%';
+
+/* Manipulacion mas seleccion */
+select * from empleados;
+
+update empleados
+set sueldo=sueldo *1.15
+where num_proyec=(select codigo_proyec
+					from proyectos
+					where upper(nombre_proyec)='GESCOM');
+                    
+use cuatrovientos;
+delete from clientes2 where codigo_cli in (select codigo_cli 
+											from clientes
+                                            where telefono like "94836%");
+
+use cuatrovientos;
+
+create view vista_empleados
+(id_empleado,nombre,apellido,sueldo,salarioxProyecto)
+as (select codigo_empl,nombre_empl,apellido_empl,sueldo,
+ROUND((datediff(p.fecha_fin,p.fecha_inicio)/31)*(sueldo/12))
+from empleados e, proyectos p
+where e.num_proyec=p.codigo_proyec and codigo_proyec=1);
+
+select * from vista_empleados;
+
+show full tables; /* ver los objetos que tenemos en la base de datos*/
 
 
 
